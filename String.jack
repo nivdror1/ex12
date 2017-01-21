@@ -61,7 +61,8 @@ class String {
     /** Appends c to this string's end and returns this string. */
     method String appendChar(char c) {
         if(strLength<maxLen){
-            let strArray[strLength+1] =c;
+            let strLength = strLength +1;
+            let strArray[strLength] =c;
         }//todo what if the strLength = maxLen?
         return this;
 
@@ -89,7 +90,35 @@ class String {
 
     /** Sets this string to hold a representation of the given value. */
     method void setInt(int val) {
+        var int counter;
+        let counter=0;
+        do setIntHelper(counter, val);
+    }
 
+    method String setIntHelper(int counter , int val){
+        var int result;
+        var boolean flag;
+        let flag= false;
+        var String text;
+        let result = val - ((val/10)*10);
+        if(val<0){
+            let flag = true;
+            let counter= counter +1;
+            let val = val*(-1);
+        }
+        if(result<10){
+            let counter= counter+1;
+            let text= new(counter);
+            return text.appendChar(result);
+        }
+        else {
+            let counter = counter +1;
+            let text = setInt(counter, val/10).appendChar(result);
+            if(flag){
+                let text = text.appendCher('-');
+            }
+            return text;
+        }
     }
 
     /** Returns the new line character. */
