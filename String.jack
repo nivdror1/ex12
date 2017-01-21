@@ -91,14 +91,14 @@ class String {
     /** Sets this string to hold a representation of the given value. */
     method void setInt(int val) {
         var int counter;
+        var boolean flag;
+        let flag =false;
         let counter=0;
         do setIntHelper(counter, val);
     }
 
-    method String setIntHelper(int counter , int val){
+    method String setIntHelper(int counter , int val, boolean flag){
         var int result;
-        var boolean flag;
-        let flag= false;
         var String text;
         let result = val - ((val/10)*10);
         if(val<0){
@@ -109,14 +109,12 @@ class String {
         if(result<10){
             let counter= counter+1;
             let text= new(counter); //todo what if the the strArray is smaller than the converted number?
+            let text = text.appendCher('-');
             return text.appendChar(result);
         }
         else {
             let counter = counter +1;
-            let text = setInt(counter, val/10).appendChar(result);
-            if(flag){
-                let text = text.appendCher('-');
-            }
+            let text = setInt(counter, val/10, flag).appendChar(result);
             return text;
         }
     }
