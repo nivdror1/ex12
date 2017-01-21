@@ -108,7 +108,7 @@ class String {
         }
         if(result<10){
             let counter= counter+1;
-            let text= new(counter);
+            let text= new(counter); //todo what if the the strArray is smaller than the converted number?
             return text.appendChar(result);
         }
         else {
