@@ -61,7 +61,7 @@ class String {
 
     /** Sets the character at the j-th location of this string to c. */
     method void setCharAt(int j, char c) {
-        if((j<maxLen &j>0) | (j=0)){
+        if((j<strLength &j>0) | (j=0)){
             let strArray[j] = c;
             return;
         }else{
@@ -78,8 +78,8 @@ class String {
             let strLength = strLength +1;
              return this;
         }else{
-             do Sys.error(17);
-             return 0;
+            do Sys.error(17);
+            return;
         }
     }
 
@@ -101,10 +101,11 @@ class String {
         var boolean flag;
         let result=0;
         let index =0;
-        while((index=strLength | strArray[index]>48 |strArray[index]>57) |(index=0 & strArray[index] =45)){
-            if(strArray[index]=45){
-                let flag= true;
-            }
+        if(index=0 & strArray[index] =45){
+            let flag= true;
+            let index = index+1;
+        }
+        while(~(index=strLength)& ~(strArray[index]<48 | strArray[index]>57 )){
             let result =(result*10) +(strArray[index]-48);
             let index = index+1;
         }
@@ -120,21 +121,19 @@ class String {
         var boolean flag;
         let flag =false;
         let counter=0;
-        do setIntHelper(counter, val,flag);
+        do setIntHelper(counter, val, flag);
         return;
     }
-
     method void setIntHelper(int counter , int val, boolean flag){
         var int result;
-        let result = val - ((val/10)*10);
         if(val<0){
             let flag = true;
             let counter= counter +1;
             let val = val*(-1);
         }
-        if(result<10){
+        if(val<10){
             let counter= counter+1;
-            if(counter> strLength & counter<maxLen){
+            if(counter> maxLen){
                 do Sys.error(19);
                 return;
             }
@@ -142,25 +141,27 @@ class String {
             if(flag){
                 do appendChar(45);
             }
-            do appendChar(result);
+            do appendChar(val+48);
             return;
         }
         else {
-            let counter = counter +1;
-            do setIntHelper(counter, val/10, flag);
-            do appendChar(result);
+            let result = val - ((val/10)*10);
+            do setIntHelper(counter+1, val/10, flag);
+            do appendChar(result+48);
             return;
         }
     }
 
+
+
     /** Returns the new line character. */
     function char newLine() {
-        return 12;
+        return 128;
     }
 
     /** Returns the backspace character. */
     function char backSpace() {
-        return 10;
+        return 129;
     }
 
     /** Returns the double quote (") character. */
