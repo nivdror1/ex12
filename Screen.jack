@@ -32,7 +32,7 @@ class Screen {
         return;
     }
 
-    /** Draws the (x,y) pixel, using the current color. */
+    /** Draws the (x,y) pixel, using the current color . */
     function void drawPixel(int x, int y) {
         var int address, data;
         let address =16384 +(y*32) + (x/16);
