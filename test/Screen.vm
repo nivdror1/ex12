@@ -50,20 +50,13 @@ pop local 3
 label WHILE_EXP0
 push local 0
 push local 4
-lt
-push local 0
-or
-push local 4
-eq
-push local 1
-push local 3
-lt
-push local 1
-or
-push local 3
-eq
-and
+gt
 not
+push local 1
+push local 3
+gt
+not
+and
 not
 if-goto WHILE_END0
 push argument 0

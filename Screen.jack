@@ -50,7 +50,7 @@ class Screen {
         let diff= 0;
         let dx = x2- x1;
         let dy = y2 -y1;
-        while(~((a<dx |a=dx)&(b<dy|b=dy))){
+        while((~(a>dx))&(~(b>dy))){
             do Screen.drawPixel(x1+a, y1+b);
             if(diff<0){
                 let a = a+1;
