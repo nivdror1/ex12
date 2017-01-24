@@ -42,7 +42,7 @@ class Screen {
 
     }
 
-    /** Draws a line from pixel (x1,y1) to pixel (x2,y2), using the current color. */
+    /** Draws a line from pixel (x1,y1) to pixel (x2,y2) , using the current color. */
     function void drawLine(int x1, int y1, int x2, int y2) {
         var int a,b,diff,dy,dx;
         let a =0;
