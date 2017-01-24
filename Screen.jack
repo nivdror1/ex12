@@ -39,7 +39,8 @@ class Screen {
 
     /** Erases the entire screen. */
     function void clearScreen() {
-
+        do Screen.setColor(false);
+        do Screen.drawRectangle(0,0,511,255);
         return;
     }
 
@@ -80,17 +81,18 @@ class Screen {
         if(~(Screen.checkLineIndex(x1,y1,x2, y2))){
             do Sys.error(8);
         }
+        if(x1>x2){
+            let temp =x1;
+            let x1= x2;
+            let x2= temp;
+            let temp =y1;
+            let y1= y2;
+            let y2= temp;
+        }
         if((x1=x2)|(y1=y2)){
             do Screen.drawStraightLine(x1,y1,x2,y2);
         }else{
-            if(x1>x2){
-                let temp =x1;
-                let x1= x2;
-                let x2= temp;
-                let temp =y1;
-                let y1= y2;
-                let y2= temp;
-            }
+
             do Screen.drawDiagonalLine(x1,y1,x2,y2);
 
         }
@@ -102,8 +104,11 @@ class Screen {
     /** Draws a filled rectangle whose top left corner is (x1, y1)
      * and bottom right corner is (x2,y2), using the current color. */
     function void drawRectangle(int x1, int y1, int x2, int y2) {
-        while(~(y1>y2)){
-            Screen.drawHorizontalLine(x1,y1,x2,y2);
+        if(~(Screen.checkLineIndex(x1,y1,x2, y2))){
+            do Sys.error(9);
+        }
+        while(~(y1>y2)){ // draw the rectangle
+            do Screen.drawHorizontalLine(x1,y1,x2,y1);
             let  y1= y1+1;
         }
         return;
@@ -111,6 +116,24 @@ class Screen {
 
     /** Draws a filled circle of radius r<=181 around (x,y), using the current color. */
     function void drawCircle(int x, int y, int r) {
+        var int x1,y1,x2,y2,dy;
+        if (r>181){
+            do Sys.error(13);
+        }
+        if(~(Screen.checkCircleValidation(x,y,r))){ //check for invalidation
+            do Sys.error(12);
+        }
+
+        let dy = ~(r)+1; //-r
+        while(~(dy>r)){
+            let x1 = x- Math.sqrt((r*r)-(dy*dy));
+            let y1 = y+dy;
+            let x2 = x+ Math.sqrt((r*r)-(dy*dy));
+            let y2 = y+dy;
+            do Screen.drawLine(x1,y1,x2,y2);
+            let dy=dy+1;
+        }
+
         return;
     }
 
@@ -131,17 +154,30 @@ class Screen {
             return false;
         }
     }
+    /**check the  circle validation*/
+    function boolean checkCircleValidation(int x,int y,int r) {
+        var int x1,x2,y1,y2;
+        let x1= x-r;
+        let x2 = x+r;
+        let y1 = y-r;
+        let y2 = y+r;
+        if(~(Screen.checkPixelIndex(x,y)) & x1<0 & y1<0 & x2>511 & y2>255){
+            return false;
+        }else{
+            return true;
+        }
+    }
     /** draws a straight line  - vertical or horizontal*/
     function void drawStraightLine(int x1, int y1, int x2, int y2){
         if(y1=y2){ // in case of vertical line
-            do Screen.drawVerticalLine(x1,y1,x2,y2);
-        }else{ // in case of horizontal line
             do Screen.drawHorizontalLine(x1,y1,x2,y2);
+        }else{ // in case of horizontal line
+            do Screen.drawVerticalLine(x1,y1,x2,y2);
         }
         return;
     }
-    /** draws a vertical line*/
-    function void drawVerticalLine(int x1 , int y1, int x2, int y2){
+    /** draws a horizontal line*/
+    function void drawHorizontalLine(int x1 , int y1, int x2, int y2){
         while(~(x1>x2)){
             do Screen.drawPixel(x1,y1);
             let x1 = x1 +1;
@@ -149,8 +185,14 @@ class Screen {
         return;
     }
 
-    /**draw a horizontal line*/
-    function void drawHorizontalLine(int x1 , int y1 , int x2, int y2){
+    /**draw a vertical line*/
+    function void drawVerticalLine(int x1 , int y1 , int x2, int y2){
+        var int temp;
+        if(y1>y2){
+            let temp= y1;
+            let y1 =y2;
+            let y2 =temp;
+        }
         while(~(y1>y2)){
             do Screen.drawPixel(x1,y1);
             let y1 = y1+1;
@@ -167,7 +209,7 @@ class Screen {
         let dx = x2- x1;
         let dy = y2 -y1;
         let absDy = Math.abs(dy);
-        while(~((a>dx))|(~(b>absDy))){
+        while(~((a>dx))&(~(b>absDy))){
             if(dy<0){
                 do Screen.drawPixel(x1+a, y1-b);
             }else{
