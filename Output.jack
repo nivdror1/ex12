@@ -19,18 +19,24 @@ class Output {
     // Character map for displaying characters
     static Array charMaps; 
 
-    static int x ,y;
+    static int x ,y,base;
 
     /** Initializes the screen, and locates the cursor at the screen's top-left. */
     function void init() {
+        let x=0;
+        let y=0;
+        let base =16384;
+        do Screen.setColor(false);
+        do Screen.drawRectangle(x,y,x+7,y+10);
+        do Output.initMap();
+        return;
     }
 
     // Initializes the character map array
     function void initMap() {
         var int i;
 
-        let x=0;
-        let y=0;
+
         let charMaps = Array.new(127);
         
         // Black square, used for displaying non-printable characters.
@@ -172,6 +178,7 @@ class Output {
     // character map of a black square.
     function Array getMap(char c) {
         if ((c < 32) | (c > 126)) {
+
             let c = 0;
         }
         return charMaps[c];
@@ -190,9 +197,39 @@ class Output {
     /** Displays the given character at the cursor location,
      *  and advances the cursor one column forward. */
     function void printChar(char c) {
+        var Array outputChar;
+         var int i, address;
+        let i=0;
+
+        let outputChar = Output.getMap(c); //get the array of the char map
+
+        while(~(i=11)){
+
+            let address= base+ (y*32*11);
+            if(~(outputChar[i]=0)){
+                do Output.printRow(~(outputChar[i]), address); // print the row
+            }
+            let i=i+1;
+        }
         return;
     }
 
+    /** print a char row*/
+    function void printRow(int bits,int address){
+        var int bits,data,j;
+        let j=0;
+        while(~(j=8)){
+            let address= address+ x/2;
+            let data = bits& Screen.getBitsArray(15-j); // an int which signifies if the pixel suppose to blackened
+            if(data=0){
+                 do Memory.poke(address,0);
+            }else{
+                do Memory.poke(address,-1);
+            }
+            let j=j+1;
+        }
+        return;
+    }
     /** displays the given string starting at the cursor location,
      *  and advances the cursor appropriately. */
     function void printString(String s) {
@@ -213,8 +250,7 @@ class Output {
 
     /** Moves the cursor one column back. */
     function void backSpace() {
-
-        let x= x-11;
+        do Output.moveCursor(x-8,y);
         return;
     }
 }

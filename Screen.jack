@@ -65,7 +65,7 @@ class Screen {
         let divX= Screen.divSixteen(x);
         let address =16384 +(y*32) + (divX);
         let data  = Memory.peek(address); //getting the data
-        let mod = x - ((divX)*16);
+        let mod = x &15; // modulo 16
 
         if (color) { //if the pixel need to be blackened
             let data = data|p[mod];
@@ -245,4 +245,7 @@ class Screen {
     		return r;
     	}
 
+    function Array getBitsArray(){
+        return p;
+    }
 }
