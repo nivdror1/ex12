@@ -271,7 +271,14 @@ class Output {
 
     /** Moves the cursor one column back. */
     function void backSpace() {
-        do Output.moveCursor(y,x-1);
+        if(x>0){
+            do Output.moveCursor(y,x-1); // normal situation
+        }if((x=0) & (y=0) ){
+            do Output.moveCursor(22,63); // goes from (0,0) -> (22,63)
+        }
+        else{
+            do Output.moveCursor(y-1,63); //goes from (y,0) -> (y-1, 63)
+        }
         return;
     }
 }
