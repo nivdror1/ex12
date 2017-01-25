@@ -207,13 +207,13 @@ class Output {
 
     /** Advances the cursor to the beginning of the next line. */
     function void println() {
-        let x= 0;
-        let y=y+11;
+        do Output.moveCursor(0,y+11);
         return;
     }
 
     /** Moves the cursor one column back. */
     function void backSpace() {
+
         let x= x-11;
         return;
     }

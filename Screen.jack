@@ -39,8 +39,12 @@ class Screen {
 
     /** Erases the entire screen. */
     function void clearScreen() {
-        do Screen.setColor(false);
-        do Screen.drawRectangle(0,0,511,255);
+        var int i;
+        let i = 0;
+        while (i < 8192) {
+            do Memory.poke(16384+ i, 0);
+            let i = i + 1;
+        }
         return;
     }
 
@@ -54,14 +58,14 @@ class Screen {
 
     /** Draws the (x,y) pixel, using the current color . */
     function void drawPixel(int x, int y) {
-        var int address, data, mod;
-
+        var int address, data, mod, divX;
         if(~(Screen.checkPixelIndex(x,y))){ //check for invalidation
             do Sys.error(7);
         }
-        let address =16384 +(y*32) + (x/16);
+        let divX= Screen.divSixteen(x);
+        let address =16384 +(y*32) + (divX);
         let data  = Memory.peek(address); //getting the data
-        let mod = x - ((x/16)*16);
+        let mod = x - ((divX)*16);
 
         if (color) { //if the pixel need to be blackened
             let data = data|p[mod];
@@ -70,8 +74,6 @@ class Screen {
         }
         do Memory.poke(address, data); //setting the new data
         return;
-
-
 
     }
 
@@ -229,4 +231,18 @@ class Screen {
         }
         return;
     }
+
+    function int divSixteen(int num) {
+    		var int r, i;
+    		let r = 0;
+    		let i = 4;
+    		while (i < 16) {
+    			if ((num & p[i]) = p[i]) {
+    				let r = r + p[i - 4];
+    			}
+    			let i = i + 1;
+    		}
+    		return r;
+    	}
+
 }
