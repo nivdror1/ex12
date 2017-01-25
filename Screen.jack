@@ -245,7 +245,7 @@ class Screen {
     		return r;
     	}
 
-    function Array getBitsArray(){
-        return p;
+    function int getBitsArray(int index){
+        return p[index];
     }
 }
