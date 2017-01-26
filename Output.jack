@@ -230,7 +230,7 @@ class Output {
                 let mask = mask * 256;  // shift 8
              }
 
-            let src[address] = src[address]& 255 | mask;
+            let src[address] = (src[address]& 255 )| mask;
             let address = address + 32 ;
             let i=i+1;
         }
