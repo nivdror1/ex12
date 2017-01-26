@@ -1,0 +1,188 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/12/Math.jack
+
+/**
+ * A library of commonly used mathematical functions.
+ * Note: Jack compilers implement multiplication and division using OS method calls.
+ */
+class Math {
+
+    static int qy2;
+    static Array POWERS_OF_2__14;
+
+    /** Initializes the library. */
+    function void init() {
+        var int i;
+
+
+        let i = 0;
+
+        let POWERS_OF_2__14 = Array.new(15);
+
+        while ( i < 15 ){
+            let POWERS_OF_2__14[i] = Math.powOf2(i);
+
+            let i = i + 1;
+        }
+
+
+        return;
+    }
+
+    /** Returns the absolute value of x. */
+    function int abs(int x) {
+        if (x > 0){
+            return x;
+        }
+        return -x;
+    }
+
+    /** Returns the product of x and y. 
+     *  When a Jack compiler detects the multiplication operator '*' in the 
+     *  program's code, it handles it by invoking this method. In other words,
+     *  the Jack expressions x*y and multiply(x,y) return the same value.
+     */
+    function int multiply(int x, int y) {
+        var int mul, signDigit;
+
+        //let signDigit = -32768;
+        let mul = Math.multiplyPositive( Math.abs(x), Math.abs(y));
+        if ((( x > 0) & ( y < 0)) | ( (x < 0) & (y > 0) ) ) {
+            let mul = -mul;
+        }
+        return mul;
+    }
+
+    function int multiplyPositive ( int x, int y ) {
+        var int sum, shiftedX, digitChooser;
+
+        let digitChooser = 1;
+        let sum = 0;
+        let shiftedX = x;
+        //let i = 0;
+        while ( ~ (digitChooser = 0) ){ // this boolean condition can be implemented faster in vm...
+            if ( ( (digitChooser & y) = digitChooser) ) { // canal
+                let sum = sum + shiftedX;
+            }
+            let shiftedX = shiftedX + shiftedX;
+            let digitChooser = digitChooser + digitChooser;
+        }
+        return sum;
+    }
+    /** Returns the integer part of x/y.
+     *  When a Jack compiler detects the multiplication operator '/' in the 
+     *  program's code, it handles it by invoking this method. In other words,
+     *  the Jack expressions x/y and divide(x,y) return the same value.
+     */
+    function int divide(int x, int y) {
+    // DOTO 16384 overflow
+        var int div, signDigit;
+
+        if (y = 0){
+            Sys.error(3);
+        }
+
+        let div = Math.divideRecursia(Math.abs(x), Math.abs(y), Math.abs(y));
+        if ((( x > 0) & ( y < 0)) | ( (x < 0) & (y > 0) ) ) {
+            let div = - div;
+        }
+
+
+
+        return div;
+
+    }
+
+    // 2-cells array, is constructed in the deepest recursia level and destructed in 'divide' function.
+    // array is 1-cell array for the q*y
+    function int divideRecursia(int x, int y, int prevY) {
+        var int q;
+
+        if (y > x) {
+            let qy2 = 0;
+            return 0;
+        }
+
+        if (y > 16383) {
+            let qy2 = y;
+            return 1;
+        }
+
+        let q = Math.divideRecursia(x, (y + y), y);
+//
+//        do Output.printString("2*q*y = ");
+//        do Output.printInt(( (q + q ) * y ));
+//        do Output.printString(",   qy2 = ");
+//        do Output.printInt(qy2);
+//        do Output.println();
+
+        if ( (x - qy2) < y) {
+            //qy2 =
+            return (q + q);
+        }
+        let qy2 = qy2 + y;
+        return (q + q + 1);
+
+
+
+    }
+
+    /** Returns the integer part of the square root of x. */
+    function int sqrt(int x) {
+        var int y, j, tmp;
+
+        if (x < 0){
+            Sys.err(4);
+        }
+
+        let y = 0;
+        let j = 7;
+
+        while ( ( j > 0) | (j = 0) ) {
+            let tmp = (y + POWERS_OF_2__14[j]);
+            if (tmp < 182) {
+                let tmp = tmp * tmp;
+
+                if ((tmp < x) | (tmp = x)) {
+                    let y = y + POWERS_OF_2__14[j];
+                }
+            }
+
+            let j = j - 1;
+        }
+        return y;
+    }
+
+    function int powOf2(int p){
+        var int i, power;
+
+
+        let i = 0;
+        let power = 1;
+
+        while (~( p = 0 )){
+            let power = power * 2;
+            let p = p - 1;
+        }
+
+        return power;
+    }
+
+    /** Returns the greater number. */
+    function int max(int a, int b) {
+        if ( a > b ) {
+            return a;
+        }
+        return b;
+    }
+
+    /** Returns the smaller number. */
+    function int min(int a, int b) {
+        if ( a > b ) {
+            return b;
+        }
+        return a;
+    }
+}
