@@ -186,10 +186,12 @@ class Output {
      *  and erases the character displayed there. */
     function void moveCursor(int i, int j) {
         var int address,i;
-
+        if((i<0)|(i>22)|(j<0)|((i<22)& (j>63))|((i=22)&(j>64))){
+            do Sys.error(20);
+        }
         let y = i;
         let x = j;
-        if (i=22 & j=64){
+        if ((i=22) & (j=64)){
             let x =0;
             let y =0;
         }
@@ -205,6 +207,7 @@ class Output {
                let address = address + 32;
                let i = i + 1;
            }
+
         return;
 
     }
@@ -265,13 +268,26 @@ class Output {
 
     /** Advances the cursor to the beginning of the next line. */
     function void println() {
-        do Output.moveCursor(y+1,0);
+        if ((x=63)& (y=22)){
+            do Output.moveCursor(0,0);
+        }else{
+            do Output.moveCursor(y+1,0);
+        }
         return;
     }
 
     /** Moves the cursor one column back. */
     function void backSpace() {
-        do Output.moveCursor(y,x-1);
+        if(x>0){
+            do Output.moveCursor(y,x-1); // normal situation
+        }else{
+            if((x=0) & (y=0) ){
+                 do Output.moveCursor(22,63); // goes from (0,0) -> (22,63)
+             }
+             else{
+                 do Output.moveCursor(y-1,63); //goes from (y,0) -> (y-1, 63)
+             }
+         }
         return;
     }
 }
