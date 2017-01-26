@@ -276,7 +276,7 @@ class Output {
         return;
     }
 
-    /** Moves the cursor one column back. */
+    /** Moves the cursor one  column back. */
     function void backSpace() {
         if(x>0){
             do Output.moveCursor(y,x-1); // normal situation
