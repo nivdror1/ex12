@@ -81,7 +81,7 @@ class Math {
         var int div, signDigit;
 
         if (y = 0){
-            Sys.error(3);
+            do Sys.error(3);
         }
 
         let div = Math.divideRecursia(Math.abs(x), Math.abs(y), Math.abs(y));
@@ -134,7 +134,7 @@ class Math {
         var int y, j, tmp;
 
         if (x < 0){
-            Sys.err(4);
+            do Sys.error(4);
         }
 
         let y = 0;

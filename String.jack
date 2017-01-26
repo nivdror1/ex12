@@ -39,7 +39,7 @@ class String {
     /** Disposes this string. */
     method void dispose() {
         let strLength = 0;
-        do Array.dispose(strArray);
+        do strArray.dispose();
         return;
     }
 

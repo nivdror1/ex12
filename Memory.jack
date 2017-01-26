@@ -44,7 +44,7 @@ class Memory {
         // todo check valid input
 
         if (size < 1){
-            Sys.err(5);
+            do Sys.error(5);
         }
 
         let previusNode = 0; // TODO
@@ -57,7 +57,7 @@ class Memory {
         }
 
         if (currentNode = 0){ // TODO
-            Sys.error(6);
+            do Sys.error(6);
             // TODO some exception/error/return null
         }
 
