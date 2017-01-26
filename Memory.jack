@@ -65,13 +65,10 @@ class Memory {
         // 4 with some spair :)
         if ( (size + 1) > (currentNode[0] - 4) ){
             if (currentNode = firstNode){
-                do Output.printInt(currentNode);
-                do Output.printInt(0);
                 let firstNode = currentNode[1];
 
             }
             else {
-                do Output.printInt(1);
                 let previusNode[1] = currentNode[1];
 
 
@@ -80,7 +77,6 @@ class Memory {
         }
 
         // case size < currentNode size: there is a remainder
-        do Output.printInt(2);
 
         let remainderNode = currentNode + size + 1;
         let remainderNode[0] = currentNode[0] - (size + 1);
