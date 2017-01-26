@@ -43,6 +43,10 @@ class Memory {
         var int currentNode, previusNode, remainderNode;
         // todo check valid input
 
+        if (size < 1){
+            Sys.err(5);
+        }
+
         let previusNode = 0; // TODO
         let currentNode = firstNode;
         // return first long enough segment
@@ -53,7 +57,7 @@ class Memory {
         }
 
         if (currentNode = 0){ // TODO
-            return  0; // TODO
+            Sys.error(6);
             // TODO some exception/error/return null
         }
 
