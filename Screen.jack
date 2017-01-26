@@ -111,11 +111,28 @@ class Screen {
         if(~(Screen.checkLineIndex(x1,y1,x2, y2))){
             do Sys.error(9);
         }
-        while(~(y1>y2)){ // draw the rectangle
-            do Screen.drawHorizontalLine(x1,y1,x2,y1);
+        while((y1<y2)){ // draw the rectangle
+            do Screen.drawHorizontalLine(x1,y1,x2);
             let  y1= y1+1;
         }
         return;
+    }
+
+    function int drawFastLine(int x1, int y, int x2,int mod){
+        var int address, value;
+        let value = Screen.setColoringValue();
+        let address= (y*32)+ (Screen.divSixteen(x1));
+        while((x1<x2)){
+            let src[address]= value;
+            let x1= x1+16;
+            let address= address+1;
+        }
+        if(mod=15){
+            let src[address] =value;
+            let x1=x1+16;
+            let address= address+1;
+        }
+        return x1;
     }
 
     /** Draws a filled circle of radius r<=181 around (x,y), using the current color. */
@@ -133,8 +150,8 @@ class Screen {
             let x1 = x- Math.sqrt((r*r)-(dy*dy));
             let y1 = y+dy;
             let x2 = x+ Math.sqrt((r*r)-(dy*dy));
-            let y2 = y+dy;
-            do Screen.drawLine(x1,y1,x2,y2);
+
+            do Screen.drawHorizontalLine(x1,y1,x2);
             let dy=dy+1;
         }
 
@@ -174,23 +191,46 @@ class Screen {
     /** draws a straight line  - vertical or horizontal*/
     function void drawStraightLine(int x1, int y1, int x2, int y2){
         if(y1=y2){ // in case of vertical line
-            do Screen.drawHorizontalLine(x1,y1,x2,y2);
+            do Screen.drawHorizontalLine(x1,y1,x2);
         }else{ // in case of horizontal line
-            do Screen.drawVerticalLine(x1,y1,x2,y2);
+            do Screen.drawVerticalLine(x1,y1,y2);
         }
         return;
     }
     /** draws a horizontal line*/
-    function void drawHorizontalLine(int x1 , int y1, int x2, int y2){
-        while(~(x1>x2)){
-            do Screen.drawPixel(x1,y1);
-            let x1 = x1 +1;
+    function void drawHorizontalLine(int x1 , int y1, int x2){
+        var int mod,i,xDivBy16;
+
+
+        let i=0;
+        let xDivBy16= Screen.divSixteen(x2);
+        let mod = x1 &15; // modulo 16
+        if(~(mod=0)){ // start drawing the line
+            let mod = 16 - mod;
+            while ((~(i = mod)) & (~(x1>x2))){
+                do Screen.drawPixel(x1,y1);
+                let x1 = x1 +1;
+                let i= i+1;
+            }
+        }
+
+        let mod = x2& 15; //modulo 16
+
+        let x1 = Screen.drawFastLine(x1,y1,x2-mod,mod); // draw the middle of the line
+
+        if( ~(mod=15)){ // ending drawing the line
+            let i =-1;
+            while ((~(i=mod)) & (~(x1>x2))){
+                do Screen.drawPixel(x1,y1);
+                let x1 = x1 +1;
+                let i= i+1;
+            }
         }
         return;
     }
 
     /**draw a vertical line*/
-    function void drawVerticalLine(int x1 , int y1 , int x2, int y2){
+    function void drawVerticalLine(int x1 , int y1 , int y2){
         var int temp;
         if(y1>y2){
             let temp= y1;
@@ -251,14 +291,12 @@ class Screen {
         return p[index];
     }
 
-    function void drawFastLine(int x1, int y1, int x2){
-        var int address;
-
-        let address= (y1*32)+ (Screen.divSixteen(x));
-        while(~(x1=x2)){
-            let src[address]= -1;
-            let x1= x1+1;
-            let address= address+1;
+    /** set the coloring value for the horizontal line*/
+    function int setColoringValue(){
+        if(color){
+            return -1;
+        }else{
+            return 0;
         }
     }
 
