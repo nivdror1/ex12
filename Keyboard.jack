@@ -54,14 +54,21 @@ class Keyboard {
      */
     function char readChar() {
         var char c,result;
+
+        do Output.printBlackChar();
+
+        // start reading
         let c =Keyboard.keyPressed();
         while(c=0){
            let c =Keyboard.keyPressed();
         }
         let result =c;
+
+        // end reading
         while(~(c=0)){
             let c =Keyboard.keyPressed();
         }
+        do Output.moveCursorBack();
         do Output.printChar(result);
         return result;
     }
@@ -89,7 +96,6 @@ class Keyboard {
                 }
             }
         }
-        do Output.println();
         return text;
     }   
 
